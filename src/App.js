@@ -11,13 +11,12 @@ function App() {
     const [expandAll, setExpandAll] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [historyContact, setHistoryContact] = useState();
+    const [mount, setMount] = useState(false);
     const CONTACTS_API = 'https://contacts-api-challenge.herokuapp.com/contacts';
     const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
     // const EDITS_API = 'http://localhost:8000/edits';
     // const CONTACTS_API = 'http://localhost:8000/contacts';
-
-    //function bellow runs on page load
-    useEffect(() => {
+    const fetchContacts = () => {
         axios.get(CONTACTS_API).then(response => {
             setContacts(response.data.map((d) => ({...d, editMode: false, expanded: false})));
             setHistoryContact(contacts[0]);
@@ -25,23 +24,36 @@ function App() {
             .catch(error => {
                 console.log(error);
             });
-    }, [contacts]);
+    }
+    //function bellow runs on page load
+    useEffect(() => {
+        if (!mount) {
+            setMount(true);
+            fetchContacts();
+        }
+    }, [contacts,mount]);
 
-    function createEditEntry(contact){
-        return {"contactid":contact.id, "fname":contact.fname, "lname": contact.lname, "number":contact.number, "email":contact.email};
+    function createEditEntry(contact) {
+        return {
+            "contactid": contact.id,
+            "fname": contact.fname,
+            "lname": contact.lname,
+            "number": contact.number,
+            "email": contact.email
+        };
     }
 
     //add contact post request, and retrieve new list of contacts
     function addContact(contact) {
         axios.post(CONTACTS_API, contact).then(response => {
-            setContacts([...contacts,response.data]);
+            setContacts([...contacts, response.data]);
             axios.post(EDITS_API, createEditEntry(response.data))
         }).catch(() => {
             alert("Email taken by another contact");
         });
     }
 
-    function toggleShowHistory(){
+    function toggleShowHistory() {
         setShowHistory(!showHistory);
     }
 
@@ -65,12 +77,12 @@ function App() {
         console.log(CONTACTS_API + '/' + contact.id, contact);
         axios.put(CONTACTS_API + '/' + contact.id, contact).then(response => {
             setContacts(contacts.map((d) => d.id === contact.id ? {...contact, expanded: true} : d));
-            axios.post(EDITS_API, createEditEntry(contact)).then(()=>{
+            axios.post(EDITS_API, createEditEntry(contact)).then(() => {
                 setHistoryContact(contact);
             });
         }).catch(error => {
-                alert("Email taken by another contact")
-            });
+            alert("Email taken by another contact")
+        });
     }
 
     function editContact(id) {
@@ -87,7 +99,11 @@ function App() {
 
     function contactOnClick(id) {
 
-        setContacts(contacts.map((contact) => contact.id === id ? {...contact, expanded: true} : {...contact, expanded: false, editMode:false}))
+        setContacts(contacts.map((contact) => contact.id === id ? {...contact, expanded: true} : {
+            ...contact,
+            expanded: false,
+            editMode: false
+        }))
         setHistoryContact(contacts.filter((c) => c.id === id)[0])
     }
 
@@ -99,14 +115,15 @@ function App() {
                 {showAdd && <AddContact onAdd={addContact}/>}
                 {
                     contacts.length > 0 ?
-                        <Contacts contacts={contacts} toggleHistory={toggleShowHistory} submitEdit={submitEdit} cancelEdit={cancelEdit}
+                        <Contacts contacts={contacts} toggleHistory={toggleShowHistory} submitEdit={submitEdit}
+                                  cancelEdit={cancelEdit}
                                   onEdit={editContact} onDelete={deleteContact} doubleClick={contactDoubleClick}
                                   click={contactOnClick}/>
                         : 'No Contacts Yet'
                 }
             </div>
 
-            {showHistory?<HistoryHeader historyContact={historyContact} toggleHistory={toggleShowHistory}/>:<></>}
+            {showHistory ? <HistoryHeader historyContact={historyContact} toggleHistory={toggleShowHistory}/> : <></>}
         </div>
     );
 }
