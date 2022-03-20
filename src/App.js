@@ -16,17 +16,18 @@ function App() {
     const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
     // const EDITS_API = 'http://localhost:8000/edits';
     // const CONTACTS_API = 'http://localhost:8000/contacts';
-    const fetchContacts = () => {
-        axios.get(CONTACTS_API).then(response => {
-            setContacts(response.data.map((d) => ({...d, editMode: false, expanded: false})));
-            setHistoryContact(contacts[0]);
-        })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+
     //function bellow runs on page load
     useEffect(() => {
+        const fetchContacts = () => {
+            axios.get(CONTACTS_API).then(response => {
+                setContacts(response.data.map((d) => ({...d, editMode: false, expanded: false})));
+                setHistoryContact(contacts[0]);
+            })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
         if (!mount) {
             setMount(true);
             fetchContacts();
@@ -63,7 +64,7 @@ function App() {
     }
 
     function deleteContact(id) {
-        axios.delete(CONTACTS_API + '/' + id).then(response => {
+        axios.delete(CONTACTS_API + '/' + id).then(() => {
             // console.log(response);
             // setContacts(response.data.map((d)=> ({...d, editMode: false})));
             setContacts(contacts.filter((c) => c.id !== id));
@@ -75,12 +76,12 @@ function App() {
 
     function submitEdit(contact) {
         console.log(CONTACTS_API + '/' + contact.id, contact);
-        axios.put(CONTACTS_API + '/' + contact.id, contact).then(response => {
+        axios.put(CONTACTS_API + '/' + contact.id, contact).then(() => {
             setContacts(contacts.map((d) => d.id === contact.id ? {...contact, expanded: true} : d));
             axios.post(EDITS_API, createEditEntry(contact)).then(() => {
                 setHistoryContact(contact);
             });
-        }).catch(error => {
+        }).catch(() => {
             alert("Email taken by another contact")
         });
     }
