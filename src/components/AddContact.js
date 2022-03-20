@@ -1,18 +1,18 @@
 import {useState} from "react";
 
 function AddContact({onAdd}) {
-    const [firstName, setFname] = useState('');
-    const [lastName, setLname] = useState('');
+    const [fname, setFname] = useState('');
+    const [lname, setLname] = useState('');
     const [number, setNumber] = useState('');
     const [email, setEmail] = useState('');
 
     function onSubmit(e){
         e.preventDefault();
-        if(!firstName){
+        if(!fname){
             alert("First name required");
             return;
         }
-        onAdd({firstName,lastName,number,email});
+        onAdd({fname,lname,number,email});
         setLname('');
         setFname('');
         setNumber('');
@@ -25,9 +25,9 @@ function AddContact({onAdd}) {
                 <label>Name</label>
             </div>
             <div className={'form-control'}>
-                <input type={'text'} placeholder={'First name'} value={firstName}
+                <input type={'text'} placeholder={'First name'} value={fname}
                        onChange={(e)=>{setFname(e.target.value)}}/>
-                <input type={'text'} placeholder={'Last name'} value={lastName}
+                <input type={'text'} placeholder={'Last name'} value={lname}
                        onChange={(e)=>{setLname(e.target.value)}}/>
             </div>
             <div className={'form-control'}>

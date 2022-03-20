@@ -54,6 +54,12 @@ body {
   width: 100%;
 }
 
+.btn-half{
+  display: block;
+  width: 50%;
+  text-align: center;
+}
+
 .contact {
   background: #f4f4f4;
   margin: 5px;

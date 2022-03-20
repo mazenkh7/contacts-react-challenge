@@ -1,71 +1,89 @@
 import Header from "./components/Header";
 import Contacts from "./components/Contacts";
 import AddContact from "./components/AddContact";
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import axios from 'axios';
 
 function App() {
-    const [contacts,setContacts] = useState([
-        {
-            id: 1,
-            firstName: 'Mazen',
-            lastName: 'Mahmoud',
-            number: '+201115484828',
-            email: 'mazen.k.eissa@gmail.com',
-            expanded: false,
-        },
-        {
-            id: 2,
-            firstName: 'Mario',
-            lastName: 'Nunez',
-            number: '+01234567890',
-            email: 'mn@gmail.com',
-            expanded: false,
-        },
-        {
-            id: 3,
-            firstName: 'Simona',
-            lastName: 'Paulescu',
-            number: '+09876543210',
-            email: 'sp@gmail.com',
-            false: true,
-        }
-    ]);
+    const [contacts, setContacts] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
     const [expandAll, setExpandAll] = useState(false);
-    function addContact(contact){
-        const id = contacts.length +1;
-        const newCon = {id,...contact};
-        setContacts([...contacts,newCon]);
-        console.log(contacts);
+    const API_ENDPOINT = 'https://contacts-api-challenge.herokuapp.com/contacts';
+    // const API_ENDPOINT = 'http://localhost:8000/contacts';
+    useEffect(() => {
+        axios.get(API_ENDPOINT).then(response => {
+            setContacts(response.data.map((d)=> ({...d, editMode: false, expanded: false})));
+        })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
+
+    function addContact(contact) {
+        axios.post(API_ENDPOINT, contact).then(response => {
+            setContacts(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
-    function toggleExpand(){
-        setContacts(contacts.map((contact)=>expandAll?{...contact, expanded:false}:{...contact, expanded:true}))
+    function toggleExpand() {
+        setContacts(contacts.map((contact) => expandAll ? {...contact, expanded: false} : {...contact, expanded: true}))
         setExpandAll(!expandAll);
     }
 
-    function deleteContact(id){
-        setContacts(contacts.filter((contact)=>contact.id!==id))
+    function deleteContact(id) {
+        axios.delete(API_ENDPOINT + '/' + id).then(response => {
+            // console.log(response);
+            // setContacts(response.data.map((d)=> ({...d, editMode: false})));
+            setContacts(contacts.filter((c)=>c.id!==id));
+        })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
-    function contactDoubleClick(id){
+    function submitEdit(contact){
+        console.log(API_ENDPOINT + '/' + contact.id,contact);
+        axios.put(API_ENDPOINT + '/' + contact.id,contact).then(response => {
+            setContacts(contacts.map((d)=> d.id===contact.id? {...contact, expanded:true} : d));
+        })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    function editContact(id){
+        setContacts(contacts.map((contact) => contact.id === id ? {...contact, editMode: true} : contact));
         console.log(id);
     }
 
-    function contactOnClick(id){
+    function cancelEdit(id){
+        setContacts(contacts.map((contact) => contact.id === id ? {...contact, editMode: false} : contact));
+        console.log("called",id);
+    }
+
+    function contactDoubleClick(id) {
+        console.log(id);
+    }
+
+    function contactOnClick(id) {
         // console.log(id);
-        setContacts(contacts.map((contact)=>contact.id===id?{...contact, expanded:!contact.expanded}:contact))
+        setContacts(contacts.map((contact) => contact.id === id ? {...contact, expanded: !contact.expanded} : contact))
         //toggle expand
     }
+
     return (
         <div className="container">
 
-            <Header onAdd={()=>setShowAdd(!showAdd)} showAdd={showAdd} expandAll={expandAll} toggleExpand={toggleExpand}/>
-            {showAdd&& <AddContact onAdd={addContact}/>}
+            <Header onAdd={() => setShowAdd(!showAdd)} showAdd={showAdd} expandAll={expandAll}
+                    toggleExpand={toggleExpand}/>
+            {showAdd && <AddContact onAdd={addContact}/>}
             {
-                contacts.length > 0?
-                <Contacts contacts={contacts} onDelete={deleteContact} doubleClick={contactDoubleClick} click={contactOnClick}/>
-                : 'No Contacts Yet'
+                contacts.length > 0 ?
+                    <Contacts contacts={contacts} submitEdit={submitEdit} cancelEdit={cancelEdit} onEdit={editContact} onDelete={deleteContact} doubleClick={contactDoubleClick}
+                              click={contactOnClick}/>
+                    : 'No Contacts Yet'
             }
         </div>
     );
