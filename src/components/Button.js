@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-function AddButton({color,text, onClick}){
+function Button({color,text, onClick}){
 
     return(
         <button onClick={onClick} style={{backgroundColor:color}} className={"btn"}>
@@ -9,13 +9,13 @@ function AddButton({color,text, onClick}){
     );
 }
 
-AddButton.defaultProps = {
+Button.defaultProps = {
 }
 
-AddButton.propTypes = {
+Button.propTypes = {
     text: PropTypes.string,
     color: PropTypes.string,
     onClick: PropTypes.func,
 }
 
-export default AddButton;
+export default Button;

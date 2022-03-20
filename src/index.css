@@ -11,13 +11,24 @@ body {
 }
 
 .container {
-  max-width: 500px;
-  margin: 30px auto;
+  width: 500px;
+  margin: 30px 15px;
   overflow: auto;
-  min-height: 300px;
+  /*height: 650px;*/
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
+}
+
+.scroll-view{
+  max-height: 500px;
+  overflow: auto;
+}
+
+.twp-pages{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .header {
@@ -29,10 +40,11 @@ body {
 
 .btn {
   display: inline-block;
+  white-space:nowrap;
   background: #000;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 10px;
   margin: 5px;
   border-radius: 5px;
   cursor: pointer;
@@ -90,13 +102,13 @@ body {
 .form-control {
   display: flex;
   flex-direction: row;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .form-control label {
   display: block;
-  /*margin: 0px 0;*/
   white-space:nowrap;
+  margin: 0 5px;
 }
 
 .form-control input {
@@ -106,6 +118,8 @@ body {
   padding: 3px 7px;
   font-size: 17px;
 }
+
+
 
 .form-control-check {
   display: flex;

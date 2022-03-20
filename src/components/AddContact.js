@@ -8,8 +8,8 @@ function AddContact({onAdd}) {
 
     function onSubmit(e){
         e.preventDefault();
-        if(!fname){
-            alert("First name required");
+        if(!fname || !lname || !number || !email){
+            alert("Mandatory information missing");
             return;
         }
         onAdd({fname,lname,number,email});

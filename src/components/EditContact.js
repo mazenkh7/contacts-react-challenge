@@ -8,6 +8,10 @@ function EditContact({contact, submitEdit, cancelEdit}) {
 
     function onSubmit(e) {
         e.preventDefault();
+        if(!fname || !lname || !number || !email){
+            alert("Mandatory information missing");
+            return;
+        }
         submitEdit({"id":contact.id, "fname":fname, "lname":lname, "number":number, "email":email});
     }
     function onReset(e){
@@ -15,7 +19,7 @@ function EditContact({contact, submitEdit, cancelEdit}) {
         cancelEdit(contact.id);
     }
     return (
-        <form className={'add-form contact expanded'} onSubmit={onSubmit} onReset={onReset}>
+        <form className={'contact expanded'} onSubmit={onSubmit} onReset={onReset}>
 
             <div className={'form-control'}>
                 <input type={'text'} placeholder={'First name'} value={fname}
@@ -34,7 +38,7 @@ function EditContact({contact, submitEdit, cancelEdit}) {
                        }}/>
             </div>
             <div className={'form-control'}>
-                <input type={'text'} placeholder={'Add email'} value={email}
+                <input className={'small-input'} type={'text'} placeholder={'Add email'} value={email}
                        onChange={(e) => {
                            setEmail(e.target.value)
                        }}/>

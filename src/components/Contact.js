@@ -1,16 +1,13 @@
-import {FaPencilAlt, FaTimes} from 'react-icons/fa'
+import {FaHistory, FaPencilAlt, FaTimes} from 'react-icons/fa'
 import EditContact from "./EditContact";
 
-function Contact({submitEdit, cancelEdit, contact, onDelete, doubleClick, onClick, onEdit}) {
+function Contact({toggleHistory, submitEdit, cancelEdit, contact, onDelete, doubleClick, onClick, onEdit}) {
 
     return (
         <>{ contact.editMode?//when edit button (pencil) is clicked
             <EditContact contact={contact} submitEdit={submitEdit} cancelEdit={cancelEdit}/>
 
             ://Normal viewing mode below
-
-
-
 
             <div className={`contact ${contact.expanded ? 'expanded' : ''}`}
                  onDoubleClick={() => {
@@ -38,7 +35,13 @@ function Contact({submitEdit, cancelEdit, contact, onDelete, doubleClick, onClic
                                     onEdit(contact.id);
                                 }}/>
                             </p>
-                            <p>{contact.email}</p>
+                            <p>
+                                {contact.email}
+                                <FaHistory onClick={(e)=>{
+                                    e.stopPropagation();
+                                    toggleHistory(contact.id);
+                                }}/>
+                            </p>
                         </> //expanded look
 
                         : <></> //not expanded look
