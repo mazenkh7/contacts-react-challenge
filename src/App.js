@@ -25,7 +25,7 @@ function App() {
             .catch(error => {
                 console.log(error);
             });
-    }, []);
+    }, [contacts]);
 
     function createEditEntry(contact){
         return {"contactid":contact.id, "fname":contact.fname, "lname": contact.lname, "number":contact.number, "email":contact.email};
