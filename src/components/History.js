@@ -3,8 +3,8 @@ import axios from "axios";
 
 
 function History({historyContact}){
-    const EDITS_API = 'http://localhost:8000/edits';
-    // const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
+    // const EDITS_API = 'http://localhost:8000/edits';
+    const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
 
     const [edits,setEdits] = useState([]);
 

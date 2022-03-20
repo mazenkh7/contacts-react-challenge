@@ -11,10 +11,10 @@ function App() {
     const [expandAll, setExpandAll] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
     const [historyContact, setHistoryContact] = useState();
-    // const CONTACTS_API = 'https://contacts-api-challenge.herokuapp.com/contacts';
-    // const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
-    const EDITS_API = 'http://localhost:8000/edits';
-    const CONTACTS_API = 'http://localhost:8000/contacts';
+    const CONTACTS_API = 'https://contacts-api-challenge.herokuapp.com/contacts';
+    const EDITS_API = 'https://contacts-api-challenge.herokuapp.com/edits';
+    // const EDITS_API = 'http://localhost:8000/edits';
+    // const CONTACTS_API = 'http://localhost:8000/contacts';
 
     //function bellow runs on page load
     useEffect(() => {
