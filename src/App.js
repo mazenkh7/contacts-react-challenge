@@ -32,7 +32,7 @@ function App() {
             setMount(true);
             fetchContacts();
         }
-    }, [fetchContacts, mount]);
+    }, [contacts, mount]);
 
     function createEditEntry(contact) {
         return {
